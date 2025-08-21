@@ -14,3 +14,13 @@ export type ProductType = {
 
 // tipagem da lista de produtos
 export type ProductsType = ProductType[];
+
+// tipagem itens carrinho
+export type CartItems = ProductType & {
+  quantity: number;
+  selectedSize: string;
+  selectedColor: string;
+}; //junção da tipagem dos produtos com as props do carrinho
+
+// tipagem do carrinho
+export type CartItemsType = CartItems[];
