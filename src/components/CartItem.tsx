@@ -1,8 +1,8 @@
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
-import { CartItems } from "@/types";
+import { CartItem } from "@/types";
 
-const CartItem = ({ item }: { item: CartItems }) => {
+const CartItems = ({ item }: { item: CartItem }) => {
   return (
     // item unico carrinho
     <div className="flex items-center justify-between" key={item.id}>
@@ -47,4 +47,4 @@ const CartItem = ({ item }: { item: CartItems }) => {
   );
 };
 
-export default CartItem;
+export default CartItems;
