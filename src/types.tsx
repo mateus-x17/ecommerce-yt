@@ -47,3 +47,15 @@ export const paymentFormSchema = z.object({
 })
 //tipagem dos botões do fomrulario de pagamento
 export type PaymentFormInputs = z.infer<typeof paymentFormSchema>
+
+
+// tipagem do contexto do carrinho
+export type CartStoreStateType = {
+  cart: CartItemsType; //os items armazenados no contexto
+  hasHydrated: boolean;
+};
+export type CartStoreActionsType = {
+  addToCart: (product: CartItem) => void; //funcao para adicionar item ao carrinho
+  removeFromCart: (product: CartItem) => void;//funcao para remover item ao carrinho
+  clearCart: () => void; //funcao para limpar o carrinho
+};
