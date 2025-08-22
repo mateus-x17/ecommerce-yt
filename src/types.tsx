@@ -12,19 +12,19 @@ export type ProductType = {
   colors: string[];
   images: Record<string, string>;
 };
-
 // tipagem da lista de produtos
 export type ProductsType = ProductType[];
 
-// tipagem itens carrinho
-export type CartItems = ProductType & {
+
+// tipagem itens carrinho - junção da tipagem dos produtos com as props do carrinho
+export type CartItem = ProductType & {
   quantity: number;
   selectedSize: string;
   selectedColor: string;
-}; //junção da tipagem dos produtos com as props do carrinho
-
+};
 // tipagem do carrinho
-export type CartItemsType = CartItems[];
+export type CartItemsType = CartItem[];
+
 
 //tipagem formulario de entrega
 export const shippingFormSchema = z.object({
