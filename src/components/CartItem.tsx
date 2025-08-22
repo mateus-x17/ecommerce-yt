@@ -1,11 +1,14 @@
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
 import { CartItem } from "@/types";
+import useCartStore  from "@/context/cartContext";
 
 const CartItems = ({ item }: { item: CartItem }) => {
+  const cartStore = useCartStore(); //acessa função do caontexto do carrinho
+  const { removeFromCart } = cartStore;  //extrai funções do contexto
   return (
     // item unico carrinho
-    <div className="flex items-center justify-between" key={item.id}>
+    <div className="flex items-center justify-between" key={item.id + item.selectedColor + item.selectedSize}>
       
       {/* IMAGE E DETALHES */}
       <div className="flex gap-8">
@@ -39,7 +42,9 @@ const CartItems = ({ item }: { item: CartItem }) => {
       </div>
 
       {/* BOTÃO DELETE */}
-      <button className="w-8 h-8 rounded-full bg-red-100 text-red-500 flex items-center justify-center cursor-pointer hover:bg-red-200 transition-all duration-300">
+      <button 
+      onClick={() => removeFromCart(item)}
+      className="w-8 h-8 rounded-full bg-red-100 text-red-500 flex items-center justify-center cursor-pointer hover:bg-red-200 transition-all duration-300">
         <Trash2 className="w-3 h-3" />
       </button>
     
