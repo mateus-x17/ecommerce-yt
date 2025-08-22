@@ -1,12 +1,12 @@
 "use client"; //como precisa de reatividade é renderizado do lado client
 
-// import useCartStore from "@/stores/cartStore";
+import useCartStore from "@/context/cartContext"
 import { ProductType } from "@/types";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react"; //armazenar tamanho e cores do produto selecionado
-// import { toast } from "react-toastify";
+import { toast } from "react-toastify"; //função para exiber mensagem no conteiner toast do app/layout
 
 // const ProductCard = ({ product }: { product: ProductType }) => {
 //   const [productTypes, setProductTypes] = useState({
@@ -118,7 +118,6 @@ import { useState } from "react"; //armazenar tamanho e cores do produto selecio
 // };
 
 const ProductCard = ({ product }: { product: ProductType }) => {
-
     // armazenar tamanho e cores do produto selecionado e por padrao selecionar o primeiro
     const [productTypes, setProductTypes] = useState({
         size: product.sizes[0],
@@ -136,8 +135,18 @@ const ProductCard = ({ product }: { product: ProductType }) => {
         //recebe o tipo e o valor para alterar o estado
         // exibir no console o valor alterado
         console.log(productTypes)
-    };
+    }; //funçao para alterar o estado de tamanho e cor de cada produto
 
+    const {addToCart} = useCartStore() //acessa função do caontexto do carrinho para adc itens
+    const handleAddToCart = () => {
+        addToCart({
+            ...product,
+            quantity: 1,
+            selectedSize: productTypes.size,
+            selectedColor: productTypes.color,
+        });
+        toast.success("Product added to cart")
+    };
 
   return (
     <div className="shadow-2xl rounded-lg overflow-hidden flex items-center justify-center sm:flex-col ">
@@ -196,7 +205,9 @@ const ProductCard = ({ product }: { product: ProductType }) => {
             {/* preço */}
             <p className="font-medium">${product.price.toFixed(2)}</p>
             {/* adc carrinho */}
-            <button className="ring-1 ring-gray-200 shadow-lg rounded-md px-2 py-1 text-sm cursor-pointer hover:text-white hover:bg-black transition-all duration-300 flex items-center gap-2">
+            <button 
+            onClick={() => handleAddToCart()}
+            className="ring-1 ring-gray-200 shadow-lg rounded-md px-2 py-1 text-sm cursor-pointer hover:text-white hover:bg-black transition-all duration-300 flex items-center gap-2">
                 <ShoppingCart className="w-4 h-4" />
                 Add to Cart
             </button>
