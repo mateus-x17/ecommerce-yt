@@ -9,6 +9,7 @@ import { ShippingFormInputs } from "@/types";
 import ShippingForm from "@/components/shippingForm";
 import PaymentForm from "@/components/paymentForm";
 import CartItems from "@/components/CartItem";
+import useCartStore from "@/context/cartContext"; //adc contexto do carrinho
 
 const steps = [
   {
@@ -25,61 +26,61 @@ const steps = [
   },
 ];
 // TEMPORARY
-const cartItems: CartItemsType = [
-  {
-    id: 1,
-    name: "Adidas CoreFit T-Shirt",
-    shortDescription:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    description:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    price: 39.9,
-    sizes: ["s", "m", "l", "xl", "xxl"],
-    colors: ["gray", "purple", "green"],
-    images: {
-      gray: "/products/1g.png",
-      purple: "/products/1p.png",
-      green: "/products/1gr.png",
-    },
-    quantity: 1,
-    selectedSize: "m",
-    selectedColor: "gray",
-  },
-  {
-    id: 2,
-    name: "Puma Ultra Warm Zip",
-    shortDescription:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    description:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    price: 59.9,
-    sizes: ["s", "m", "l", "xl"],
-    colors: ["gray", "green"],
-    images: { gray: "/products/2g.png", green: "/products/2gr.png" },
-    quantity: 1,
-    selectedSize: "l",
-    selectedColor: "gray",
-  },
-  {
-    id: 3,
-    name: "Nike Air Essentials Pullover",
-    shortDescription:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    description:
-      "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
-    price: 69.9,
-    sizes: ["s", "m", "l"],
-    colors: ["green", "blue", "black"],
-    images: {
-      green: "/products/3gr.png",
-      blue: "/products/3b.png",
-      black: "/products/3bl.png",
-    },
-    quantity: 1,
-    selectedSize: "l",
-    selectedColor: "black",
-  },
-];
+// const cartItems: CartItemsType = [
+//   {
+//     id: 1,
+//     name: "Adidas CoreFit T-Shirt",
+//     shortDescription:
+//       "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
+//     description:
+//       "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
+//     price: 39.9,
+//     sizes: ["s", "m", "l", "xl", "xxl"],
+//     colors: ["gray", "purple", "green"],
+//     images: {
+//       gray: "/products/1g.png",
+//       purple: "/products/1p.png",
+//       green: "/products/1gr.png",
+//     },
+//     quantity: 1,
+//     selectedSize: "m",
+//     selectedColor: "gray",
+//   },
+//   {
+//     id: 2,
+//     name: "Puma Ultra Warm Zip",
+//     shortDescription:
+//       "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
+//     description:
+//       "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
+//     price: 59.9,
+//     sizes: ["s", "m", "l", "xl"],
+//     colors: ["gray", "green"],
+//     images: { gray: "/products/2g.png", green: "/products/2gr.png" },
+//     quantity: 1,
+//     selectedSize: "l",
+//     selectedColor: "gray",
+//   },
+//   {
+//     id: 3,
+//     name: "Nike Air Essentials Pullover",
+//     shortDescription:
+//       "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
+//     description:
+//       "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
+//     price: 69.9,
+//     sizes: ["s", "m", "l"],
+//     colors: ["green", "blue", "black"],
+//     images: {
+//       green: "/products/3gr.png",
+//       blue: "/products/3b.png",
+//       black: "/products/3bl.png",
+//     },
+//     quantity: 1,
+//     selectedSize: "l",
+//     selectedColor: "black",
+//   },
+// ];
 
 
 const CartPage = () =>{
@@ -90,6 +91,8 @@ const CartPage = () =>{
   // controla o fluxo dos passos atraves de query params se inciando em 1 e avançando
   const activeStep = parseInt(searchParams.get("step") || "1");
   console.log(activeStep);
+
+  const {cart, removeFromCart} = useCartStore(); //extrai funções do contexto
 
     return(
         <div className="flex flex-col gap-8 items-center justify-center mt-12">
@@ -116,9 +119,13 @@ const CartPage = () =>{
             {/* steps - controla o que é mostrado na div esquerda*/}
             <div className="w-full lg:w-7/12 shadow-lg border-1 border-gray-100 p-8 rounded-lg flex flex-col gap-8">
               {activeStep === 1 ? (
-                cartItems.map((item)=>(
+                cart.map((item)=>(
                   <CartItems key={item.id} item={item}/>
                 ))
+                // cartItems.map((item)=>(
+                //   <CartItems key={item.id} item={item}/>
+                // ))
+                // como era no desenvolvimento antes de usar o contexto do carrinho
               ) 
               : 
               activeStep === 2 ? (<ShippingForm setShippingForm={setShippingForm}/>) 
@@ -135,7 +142,8 @@ const CartPage = () =>{
               <div className="flex flex-col gap-4">
                 <div className="flex justify-between text-sm ">
                   <p className=" text-gray-400">subtotal</p>
-                  <p className="font-medium">${cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}</p>
+                  <p className="font-medium">${cart.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}</p>
+                  {/* <p className="font-medium">${cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}</p> */}
                 </div>
 
                 <div className="flex justify-between text-sm ">
@@ -151,7 +159,8 @@ const CartPage = () =>{
 
                 <div className="flex justify-between ">
                   <p className=" text-gray-400">Total</p>
-                  <p className="font-semibold">${cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}</p>
+                  <p className="font-semibold">${cart.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}</p>
+                  {/* <p className="font-semibold">${cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}</p> */}
                 </div>
               </div>
 
