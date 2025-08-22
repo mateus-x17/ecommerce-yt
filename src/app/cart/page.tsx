@@ -8,7 +8,7 @@ import { CartItemsType } from "@/types";
 import { ShippingFormInputs } from "@/types";
 import ShippingForm from "@/components/shippingForm";
 import PaymentForm from "@/components/paymentForm";
-import CartItem from "@/components/CartItem";
+import CartItems from "@/components/CartItem";
 
 const steps = [
   {
@@ -117,7 +117,7 @@ const CartPage = () =>{
             <div className="w-full lg:w-7/12 shadow-lg border-1 border-gray-100 p-8 rounded-lg flex flex-col gap-8">
               {activeStep === 1 ? (
                 cartItems.map((item)=>(
-                  <CartItem key={item.id} item={item}/>
+                  <CartItems key={item.id} item={item}/>
                 ))
               ) 
               : 
