@@ -5,6 +5,7 @@ import { ArrowRight, Trash2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { CartItemsType } from "@/types";
+import { ShippingFormInputs } from "@/types";
 import ShippingForm from "@/components/shippingForm";
 import PaymentForm from "@/components/paymentForm";
 import CartItem from "@/components/CartItem";
@@ -84,6 +85,7 @@ const cartItems: CartItemsType = [
 const CartPage = () =>{
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [shippingForm, setShippingForm] = useState<ShippingFormInputs>(); //guarda os dados do fomrulario de entrega
 
   // controla o fluxo dos passos atraves de query params se inciando em 1 e avançando
   const activeStep = parseInt(searchParams.get("step") || "1");
@@ -119,9 +121,9 @@ const CartPage = () =>{
                 ))
               ) 
               : 
-              activeStep === 2 ? (<ShippingForm/>) 
+              activeStep === 2 ? (<ShippingForm setShippingForm={setShippingForm}/>) 
               : 
-              activeStep === 3 && <ShippingForm/> ? <PaymentForm/> 
+              activeStep === 3 && <ShippingForm setShippingForm={setShippingForm}/> ? (<PaymentForm/>)  
               : 
               <p className="text-sm text-gray-500">please fill in the shipping form to continue</p>}
             </div>
